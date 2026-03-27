@@ -3,19 +3,16 @@ import { useStore } from '../store/useStore';
 import { allKeys } from '../music/MusicTheory';
 
 export const Transport: React.FC = () => {
-  const { isPlaying, bpm, key, genre, progressionName, play, stop, setBpm, setKey, regenerate } =
-    useStore((s) => ({
-      isPlaying: s.isPlaying,
-      bpm: s.bpm,
-      key: s.key,
-      genre: s.genre,
-      progressionName: s.progressionName,
-      play: s.play,
-      stop: s.stop,
-      setBpm: s.setBpm,
-      setKey: s.setKey,
-      regenerate: s.regenerate,
-    }));
+  const isPlaying      = useStore((s) => s.isPlaying);
+  const bpm            = useStore((s) => s.bpm);
+  const key            = useStore((s) => s.key);
+  const genre          = useStore((s) => s.genre);
+  const progressionName = useStore((s) => s.progressionName);
+  const play           = useStore((s) => s.play);
+  const stop           = useStore((s) => s.stop);
+  const setBpm         = useStore((s) => s.setBpm);
+  const setKey         = useStore((s) => s.setKey);
+  const regenerate     = useStore((s) => s.regenerate);
 
   const [bpmInput, setBpmInput] = useState<string | null>(null);
 

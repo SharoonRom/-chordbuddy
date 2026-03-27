@@ -24,15 +24,12 @@ const VolumeSlider: React.FC<SliderProps> = ({ label, value, onChange }) => (
 );
 
 export const VolumePanel: React.FC = () => {
-  const { masterVolume, chordVolume, drumVolume, setMasterVolume, setChordVolume, setDrumVolume } =
-    useStore((s) => ({
-      masterVolume: s.masterVolume,
-      chordVolume: s.chordVolume,
-      drumVolume: s.drumVolume,
-      setMasterVolume: s.setMasterVolume,
-      setChordVolume: s.setChordVolume,
-      setDrumVolume: s.setDrumVolume,
-    }));
+  const masterVolume    = useStore((s) => s.masterVolume);
+  const chordVolume     = useStore((s) => s.chordVolume);
+  const drumVolume      = useStore((s) => s.drumVolume);
+  const setMasterVolume = useStore((s) => s.setMasterVolume);
+  const setChordVolume  = useStore((s) => s.setChordVolume);
+  const setDrumVolume   = useStore((s) => s.setDrumVolume);
 
   return (
     <div className="volume-panel">

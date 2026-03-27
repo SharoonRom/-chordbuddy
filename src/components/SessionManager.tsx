@@ -2,12 +2,10 @@ import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
 
 export const SessionManager: React.FC = () => {
-  const { sessions, saveSession, loadSession, deleteSession } = useStore((s) => ({
-    sessions: s.sessions,
-    saveSession: s.saveSession,
-    loadSession: s.loadSession,
-    deleteSession: s.deleteSession,
-  }));
+  const sessions      = useStore((s) => s.sessions);
+  const saveSession   = useStore((s) => s.saveSession);
+  const loadSession   = useStore((s) => s.loadSession);
+  const deleteSession = useStore((s) => s.deleteSession);
 
   const [saveName, setSaveName] = useState('');
   const [open, setOpen] = useState(false);
