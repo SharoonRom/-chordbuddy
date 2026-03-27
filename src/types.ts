@@ -1,6 +1,10 @@
 // ─── Core Domain Types ────────────────────────────────────────────────────────
 
 export type Genre = 'slow-indie' | 'ambient' | 'rock' | 'pop' | 'sad' | 'happy';
+export type SectionType = 'intro' | 'verse' | 'chorus' | 'bridge' | 'outro';
+export type Instrument = 'piano' | 'guitar' | 'pad';
+export type Theme = 'dark' | 'light';
+export type PlayMode = 'idle' | 'section' | 'song';
 
 export type ChordType =
   | 'major' | 'minor' | 'major7' | 'minor7'
@@ -10,24 +14,24 @@ export type ScaleType = 'major' | 'minor';
 
 export interface Chord {
   id: string;
-  name: string;         // display: "Am", "Cmaj7"
-  root: string;         // "A", "C#"
+  name: string;
+  root: string;
   type: ChordType;
-  notes: number[];      // MIDI note numbers
+  notes: number[];
   durationBeats: number;
-  position: number;     // absolute beat offset in timeline
-  degree: number;       // 1–7 scale degree
+  position: number;
+  degree: number;
 }
 
-export interface DrumPattern {
-  name: string;
-  kick:  boolean[];    // 16 steps
-  snare: boolean[];
-  hihat: boolean[];
+export interface Section {
+  id: string;
+  type: SectionType;
+  label: string;
+  chords: Chord[];
 }
 
 export interface ProgressionTemplate {
-  degrees: number[];   // 1-based scale degrees
+  degrees: number[];
   scale: ScaleType;
   name: string;
   beatsPerChord: number;
@@ -36,11 +40,18 @@ export interface ProgressionTemplate {
 export interface GenreConfig {
   label: string;
   bpmRange: [number, number];
-  progressions: ProgressionTemplate[];
   preferredKeys: string[];
-  drumPatterns: DrumPattern[];
   chordStyle: 'simple' | 'extended' | 'ambient' | 'power';
   beatsPerChord: number;
+  drumPatterns: string[];
+  progressions: ProgressionTemplate[];
+}
+
+export interface DrumPattern {
+  name: string;
+  kick:  boolean[];
+  snare: boolean[];
+  hihat: boolean[];
 }
 
 export interface Session {
@@ -48,8 +59,11 @@ export interface Session {
   name: string;
   genre: Genre;
   key: string;
+  scale: ScaleType;
   bpm: number;
-  chords: Chord[];
+  instrument: Instrument;
+  sections: Section[];
+  arrangement: string[];
   drumPattern: DrumPattern;
   createdAt: number;
 }

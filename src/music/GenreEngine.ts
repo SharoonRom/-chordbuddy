@@ -127,6 +127,7 @@ export interface GeneratedProgression {
   chords: Chord[];
   bpm: number;
   key: string;
+  scale: ScaleType;
   drumPatternName: string;
   templateName: string;
 }
@@ -135,7 +136,7 @@ export function generateProgression(genre: Genre, forcedKey?: string): Generated
   const config = GENRE_CONFIGS[genre];
 
   // Pick key
-  const rawKey = forcedKey ?? rand(config.preferredKeys);
+  const rawKey: string = forcedKey ?? rand(config.preferredKeys);
   const { root: keyRoot } = resolveKey(rawKey);
 
   // Pick progression template
@@ -146,7 +147,7 @@ export function generateProgression(genre: Genre, forcedKey?: string): Generated
 
   // Build chords
   let position = 0;
-  const chords: Chord[] = template.degrees.map((degree, i) => {
+  const chords: Chord[] = template.degrees.map((degree: number, i: number) => {
     const { root, type, notes } = chordFromDegree(
       degree,
       keyRoot,
@@ -177,6 +178,7 @@ export function generateProgression(genre: Genre, forcedKey?: string): Generated
     chords,
     bpm,
     key: rawKey,
+    scale: templateScale,
     drumPatternName: drumPattern.name,
     templateName: template.name,
   };

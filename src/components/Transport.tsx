@@ -3,26 +3,21 @@ import { useStore } from '../store/useStore';
 import { allKeys } from '../music/MusicTheory';
 
 export const Transport: React.FC = () => {
-  const isPlaying      = useStore((s) => s.isPlaying);
-  const bpm            = useStore((s) => s.bpm);
-  const key            = useStore((s) => s.key);
-  const genre          = useStore((s) => s.genre);
-  const progressionName = useStore((s) => s.progressionName);
-  const play           = useStore((s) => s.play);
-  const stop           = useStore((s) => s.stop);
-  const setBpm         = useStore((s) => s.setBpm);
-  const setKey         = useStore((s) => s.setKey);
-  const regenerate     = useStore((s) => s.regenerate);
+  const isPlaying  = useStore(s => s.isPlaying);
+  const playMode   = useStore(s => s.playMode);
+  const bpm        = useStore(s => s.bpm);
+  const key        = useStore(s => s.key);
+  const scale      = useStore(s => s.scale);
+  const playSong   = useStore(s => s.playSong);
+  const stop       = useStore(s => s.stop);
+  const setBpm     = useStore(s => s.setBpm);
+  const setKey     = useStore(s => s.setKey);
 
   const [bpmInput, setBpmInput] = useState<string | null>(null);
 
-  const handlePlay = () => {
+  const handlePlaySong = () => {
     if (isPlaying) stop();
-    else play();
-  };
-
-  const handleBpmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBpmInput(e.target.value);
+    else playSong();
   };
 
   const handleBpmCommit = () => {
@@ -37,30 +32,29 @@ export const Transport: React.FC = () => {
 
   return (
     <div className="transport">
-      {/* Play/Stop */}
       <div className="transport-left">
+        {/* Song play/stop */}
         <button
-          className={`play-btn ${isPlaying ? 'active' : ''}`}
-          onClick={handlePlay}
-          title={isPlaying ? 'Stop' : 'Play'}
+          className={`play-btn ${isPlaying && playMode === 'song' ? 'active' : ''}`}
+          onClick={handlePlaySong}
+          title={isPlaying && playMode === 'song' ? 'Stop song' : 'Play full song'}
         >
-          {isPlaying ? (
-            <span className="icon-stop">■</span>
-          ) : (
-            <span className="icon-play">▶</span>
-          )}
+          {isPlaying && playMode === 'song' ? <span className="icon-stop">■</span> : <span className="icon-play">▶</span>}
         </button>
-
         <div className="transport-meta">
-          <span className="progression-name">{progressionName}</span>
+          <span className="progression-name">
+            {isPlaying
+              ? playMode === 'song' ? 'PLAYING SONG' : 'PLAYING SECTION'
+              : 'READY'}
+          </span>
           <div className="transport-badges">
-            <span className="badge">{genre.replace('-', ' ').toUpperCase()}</span>
             <span className="badge">{key}</span>
+            <span className="badge">{scale.toUpperCase()}</span>
+            <span className="badge">{bpm} BPM</span>
           </div>
         </div>
       </div>
 
-      {/* BPM + Key */}
       <div className="transport-center">
         <div className="control-group">
           <label className="ctrl-label">BPM</label>
@@ -70,9 +64,9 @@ export const Transport: React.FC = () => {
             min={40}
             max={220}
             value={bpmInput !== null ? bpmInput : bpm}
-            onChange={handleBpmChange}
+            onChange={e => setBpmInput(e.target.value)}
             onBlur={handleBpmCommit}
-            onKeyDown={(e) => e.key === 'Enter' && handleBpmCommit()}
+            onKeyDown={e => e.key === 'Enter' && handleBpmCommit()}
           />
           <div className="bpm-nudge">
             <button onClick={() => setBpm(Math.max(40, bpm - 1))}>−</button>
@@ -85,20 +79,11 @@ export const Transport: React.FC = () => {
           <select
             className="key-select"
             value={key}
-            onChange={(e) => setKey(e.target.value)}
+            onChange={e => setKey(e.target.value)}
           >
-            {keys.map((k) => (
-              <option key={k} value={k}>{k}</option>
-            ))}
+            {keys.map(k => <option key={k} value={k}>{k}</option>)}
           </select>
         </div>
-      </div>
-
-      {/* Regenerate */}
-      <div className="transport-right">
-        <button className="regen-btn" onClick={regenerate} title="New progression (same genre)">
-          ↻ NEW
-        </button>
       </div>
     </div>
   );
